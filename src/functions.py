@@ -64,9 +64,11 @@ def update_task(args, path):
     with open(path, 'w') as file:
         json.dump(data, file, indent=4)
 
-def delete_task(path):
+def delete_task(path, testcase):
     '''Delete a specified task by ID.'''
     # Add a new task to the JSON file
+    testcase = False
+
     with open(path, 'r') as file:
         data = json.load(file)
 

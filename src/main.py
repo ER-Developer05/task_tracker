@@ -26,7 +26,7 @@ if __name__ == "__main__":
     
     parser.add_argument('--delete',
                         choices=['all', 'id'] ,
-                        help="delete tasks.")
+                        help="delete all tasks or delete tasks by ID.")
     
     group.add_argument('--id', 
                         type=int, 
