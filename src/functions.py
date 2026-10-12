@@ -4,6 +4,16 @@ import datetime as dt
 # Create a json file with a list to store all of our tasks
 timedateformat = '%a, %b, %Y, %H:%M:%S %p'
 
+
+def load_data(path, mode, method, source=''):
+    """Function for loading and saving JSON data"""
+    with open(path, mode) as file:
+        if source != '':
+            data = method(source, file)
+        else:
+            data = method(file)
+        return data
+
 def list_task(task):
     '''Print the individual values of each task.'''
     print(f"\nID:             {task.get('id')}")
@@ -18,9 +28,8 @@ def create_task(args, path):
     # Add a new task
     desc = args.add
 
-    # Add a new task to the JSON file
-    with open(path, 'r') as file:
-        data = json.load(file)
+    # Load the JSON file
+    data = load_data(path=path, mode='r', method=json.load)
 
     # Add a unique ID to each newly created task.
     highest = 0
@@ -39,18 +48,15 @@ def create_task(args, path):
     
     data.append(new_task)
 
-    # Save changes to the JSON file
-    with open(path, 'w') as file:
-        json.dump(data, file, indent=4)
+    load_data(path=path, mode='w', method=json.dump, source=data)
 
     print(f"TASK CREATED: '{new_task['desc']}' | {tday} (ID: {new_id})")
 
 def update_task(args, path):
     """Update an existing task."""
 
-    # Add a new task to the JSON file
-    with open(path, 'r') as file:
-        data = json.load(file)
+    # Load the JSON file
+    data = load_data(path=path, mode='r', method=json.load)
 
     for task in data:
         if args.update == task['id']:    
@@ -61,16 +67,13 @@ def update_task(args, path):
             task.update({'desc': message})
 
     # Save changes to the JSON file
-    with open(path, 'w') as file:
-        json.dump(data, file, indent=4)
+    load_data(path=path, mode='w', method=json.dump, source=data)
 
-def delete_task(path, testcase):
+def delete_task(path):
     '''Delete a specified task by ID.'''
-    # Add a new task to the JSON file
-    testcase = False
 
-    with open(path, 'r') as file:
-        data = json.load(file)
+    # Load the JSON file
+    data = load_data(path=path, mode='r', method=json.load)
 
     # Give the user the option to opt out of deleting a task
     enter_id = int(input("\nDelete task by ID:\n"))
@@ -85,15 +88,14 @@ def delete_task(path, testcase):
             print('ACTION CANCELED.')    
 
     # Save changes to the JSON file
-    with open(path, 'w') as file:
-        json.dump(data, file, indent=4)
+    load_data(path=path, mode='w', method=json.dump, source=data)
+    
 
 def delete_all_tasks(path):
     '''Delete ALL tasks.'''
 
-    # Add a new task to the JSON file
-    with open(path, 'r') as file:
-        data = json.load(file)
+    # Load the JSON file
+    data = load_data(path=path, mode='r', method=json.load)
 
     # Give the user the option to opt out of deleting ALL tasks.
     message = input(f"Are you sure you want to delete ALL tasks? (y/n)\n" )
@@ -104,13 +106,13 @@ def delete_all_tasks(path):
         print('ACTION CANCELLED.')  
 
     # Save changes to the JSON file
-    with open(path, 'w') as file:
-        json.dump(data, file, indent=4)   
+    load_data(path=path, mode='w', method=json.dump, source=data)
+    
 
 def mark_task_in_progress(args, path):
-    # Add a new task to the JSON file
-    with open(path, 'r') as file:
-        data = json.load(file)
+
+    # Load the JSON file
+    data = load_data(path=path, mode='r', method=json.load)
 
     # Find a task by its ID and mark its progress
     for task in data:
@@ -119,13 +121,13 @@ def mark_task_in_progress(args, path):
             print(f"STATUS:'{task['desc']}': {task['status']}")
 
     # Save changes to the JSON file
-    with open(path, 'w') as file:
-        json.dump(data, file, indent=4)   
+    load_data(path=path, mode='w', method=json.dump, source=data)
+    
 
 def mark_task_done(args, path):
-    # Add a new task to the JSON file
-    with open(path, 'r') as file:
-        data = json.load(file)
+
+    # Load the JSON file
+    data = load_data(path=path, mode='r', method=json.load)
 
     # Find a task by its ID and mark its progress
     for task in data:
@@ -134,13 +136,13 @@ def mark_task_done(args, path):
             print(f"'{task['desc']}' of status: {task['status']}")
 
     # Save changes to the JSON file
-    with open(path, 'w') as file:
-        json.dump(data, file, indent=4)   
+    load_data(path=path, mode='w', method=json.dump, source=data)
+    
 
 def check_task_status(args, path):
-    # Add a new task to the JSON file
-    with open(path, 'r') as file:
-        data = json.load(file)
+
+    # Load the JSON file
+    data = load_data(path=path, mode='r', method=json.load)
 
     # Find a task by its ID and check its status
     for task in data:
@@ -148,13 +150,13 @@ def check_task_status(args, path):
             print(f"'{task['desc']}' status: {task['status']}")
 
     # Save changes to the JSON file
-    with open(path, 'w') as file:
-        json.dump(data, file, indent=4)   
+    load_data(path=path, mode='w', method=json.dump, source=data)
+      
 
 def list_tasks(path):
-    # Add a new task to the JSON file
-    with open(path, 'r') as file:
-        data = json.load(file)
+
+    # Load the JSON file
+    data = load_data(path=path, mode='r', method=json.load)
 
     # List all tasks
     print('\nCurrent tasks and their attributes:')
@@ -162,13 +164,13 @@ def list_tasks(path):
         list_task(task)
 
     # Save changes to the JSON file
-    with open(path, 'w') as file:
-        json.dump(data, file, indent=4)   
+    load_data(path=path, mode='w', method=json.dump, source=data)
+    
 
 def list_by_id(args, path):
-    # Add a new task to the JSON file
-    with open(path, 'r') as file:
-        data = json.load(file)
+
+    # Load the JSON file
+    data = load_data(path=path, mode='r', method=json.load)
 
     # List all tasks
     for task in data:
@@ -176,13 +178,13 @@ def list_by_id(args, path):
             list_task(task)
 
     # Save changes to the JSON file
-    with open(path, 'w') as file:
-        json.dump(data, file, indent=4)   
+    load_data(path=path, mode='w', method=json.dump, source=data)
+    
 
 def list_todo_tasks(path):
-    # Add a new task to the JSON file
-    with open(path, 'r') as file:
-        data = json.load(file)
+
+    # Load the JSON file
+    data = load_data(path=path, mode='r', method=json.load)
 
     # List tasks by their status
     print('\nCurrent tasks and their attributes:')
@@ -191,13 +193,13 @@ def list_todo_tasks(path):
             list_task(task)
 
     # Save changes to the JSON file
-    with open(path, 'w') as file:
-        json.dump(data, file, indent=4)   
+    load_data(path=path, mode='w', method=json.dump, source=data)
+    
 
 def list_in_progress_tasks(path):
-    # Add a new task to the JSON file
-    with open(path, 'r') as file:
-        data = json.load(file)
+
+    # Load the JSON file
+    data = load_data(path=path, mode='r', method=json.load)
 
     # List tasks by their status
     print('\nCurrent tasks and their attributes:')
@@ -206,13 +208,13 @@ def list_in_progress_tasks(path):
             list_task(task)
 
     # Save changes to the JSON file
-    with open(path, 'w') as file:
-        json.dump(data, file, indent=4)   
+    load_data(path=path, mode='w', method=json.dump, source=data)
+     
 
 def list_done_tasks(path):
-    # Add a new task to the JSON file
-    with open(path, 'r') as file:
-        data = json.load(file)
+
+    # Load the JSON file
+    data = load_data(path=path, mode='r', method=json.load)
 
     # List tasks by their status
     print('\nCurrent tasks and their attributes:')
@@ -221,5 +223,5 @@ def list_done_tasks(path):
             list_task(task)
 
     # Save changes to the JSON file
-    with open(path, 'w') as file:
-        json.dump(data, file, indent=4)   
+    load_data(path=path, mode='w', method=json.dump, source=data)
+     
